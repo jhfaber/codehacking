@@ -1,1 +1,40 @@
-<h1>Its working</h1>
+@extends('layouts.admin')
+@section('content')
+    <h1>Users</h1>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        @if($users)
+            @foreach($users as $user)
+                  <tr>
+                      <td>{{$user->id}}</td>
+                      <td>{{$user->name}}</td>
+                      <td>{{$user->email}}</td>
+                      <td>{{$user->role->name}}</td>
+                      <td>{{$user->is_active == 1 ? 'Active' : 'No Active'}}</td>
+                      <!-- Then next code is a conditional if x = x ? that :else that -->
+                      <td>{{$user->created_at != null ? $user->created_at->diffForHumans() : 'No value'}}</td>
+                      <td>{{$user->updated_at != null ? $user->updated_at->diffForHumans() : 'No value'}}</td>
+                  </tr>
+            @endforeach
+        @endif
+        </tbody>
+      </table>
+     </div>
+
+
+
+@endsection
