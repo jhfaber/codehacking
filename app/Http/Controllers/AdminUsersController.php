@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UsersEditRequest;
 use App\Http\Requests\UsersRequest;
 use Illuminate\Http\Request;
 use App\User;
@@ -43,17 +44,26 @@ class AdminUsersController extends Controller
     public function store(UsersRequest $request)
     {
 
-
+        /**
+         * AWESOME CODE, the next code store in two differents tables photos and
+         * users, first store the file, it is important assignate to a object,
+         * because that object have the id of the photo and the path of the photo,
+         * save the id of the photo as foreign key, thanks to that, we can retrieve
+         * the user and her correnonding photo,
+         *
+         */
         $input = $request->all();
-        return $request;
-//        if($file= $request->file('photo_id')){
-//            $name= time(). $file->getClientOriginalName(); //name format
-//            $file->move('images',$name);
-//            $photo= Photo::create(['file'=>$name]);
-//            $input['photo_id'] = $photo->id;
-//        }
-//        $input['password']=bcrypt($request->password);
-//        User::create($input);
+
+        if($file= $request->file('photo_id')){
+            $name= time(). $file->getClientOriginalName(); //name format
+            $file->move('images',$name);
+            $photo= Photo::create(['file'=>$name]);
+            $input['photo_id'] = $photo->id; //it is a foreign key photo->id is the id of the photo
+        }
+        $input['password']=bcrypt($request->password);
+//          return $photo;
+        User::create($input);
+        return redirect('/admin/users');
 
 
 //        $data= $request->name;
@@ -91,7 +101,9 @@ class AdminUsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $roles = Role::pluck('name','id');
+        return view('admin.users.edit',compact('user','roles'));
     }
 
     /**
@@ -101,9 +113,42 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
-        //
+        /**
+         * DON'T SAVE A PASSWORD EMPTY, if the password is empty don't update
+         * that
+         */
+        if(trim($request->password) =='' ){
+
+            $input = $request->except('password');
+
+
+        }else{
+
+            $input = $request->all();
+            $input['password'] = bcrypt($request->password);
+        }
+
+        /**
+         *THE NEXT CODE IS FOR VALIDATE IF THE FORM HAVE ONE PHOTO,
+         * IF THAT IS THE CASE, change the name with the actual date and the
+         * original name of the file, later moves that to a directory, /images/{name}
+         * later update the path of the file in Photo model,
+         */
+        $user = User::findOrFail($id);
+        if($file = $request->file('photo_id')){
+            $name=time().$file->getClientOriginalName();
+            $file->move('images',$name);
+            $photo = Photo::create(['file'=>$name]);
+            $input['photo_id'] = $photo->id;
+
+
+        }
+        $user->update($input);
+        return redirect('admin/users');
+
+
     }
 
     /**

@@ -38,4 +38,10 @@ class User extends Authenticatable
     public function photo(){
         return $this->belongsTo('App\Photo');
     }
+    //make the password not null, really i dont understand very well
+    public function setPasswordAttribute($password){
+        if(!empty($password)){
+        $this->attributes['password'] =bcrypt($password);
+        }
+    }
 }
