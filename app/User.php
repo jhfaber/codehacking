@@ -39,9 +39,25 @@ class User extends Authenticatable
         return $this->belongsTo('App\Photo');
     }
     //make the password not null, really i dont understand very well
+
+    /**
+     * It is comment because in the adminusercontroller we have one logic of password
+     * encrypt, this is the reason, we have two encrypt passwords, this make a wrong password
+     * in the db, a encrypt password, again encrypt
+
+
     public function setPasswordAttribute($password){
         if(!empty($password)){
         $this->attributes['password'] =bcrypt($password);
         }
     }
+     * */
+
+    public function isAdmin(){
+        if($this->role->name == "administrator" && $this->is_active == 1){
+            return true;
+        }
+        return false;
+    }
+
 }
