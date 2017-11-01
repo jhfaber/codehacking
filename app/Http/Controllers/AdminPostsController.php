@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostsCreateRequest;
+use Auth;
+use App\Photo;
 
 class AdminPostsController extends Controller
 {
@@ -34,9 +37,28 @@ class AdminPostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostsCreateRequest $request)
     {
-        //
+        $input = $request->all();
+        $user= Auth::user(); //return the actually user looged in
+
+        if($file =$request->file('photo_id')){
+            $name= time(). $file->getClientOriginalName();
+            $file->move('images', $name);
+            $photo = Photo::create(['file'=>$name]);
+            $input['photo_id'] = $photo->id;
+        }
+        /**
+         * $user->posts() it is the accessing the relationship between User and his Post
+         * so by using this $user->posts()->create($input); you are creating the new Post,
+         * but you're also associating that newly created Post with the User
+         */
+        $user->posts()->create($input);
+
+        return redirect('/admin/posts');
+
+
+
     }
 
     /**
