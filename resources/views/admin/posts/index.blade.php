@@ -23,11 +23,12 @@
 
                           <tr>
                                 <td>{{$post->id}}</td>
-                              <td><img height=50 width="50" src="{{$post->photo_id ? $post->photo->file : 'http://placehold.it/400x400'}}" alt=""></td>
-                                <td>{{$post->user->name}}</td>
+                              <td><img height=50 width="100" src="{{$post->photo_id ? $post->photo->file : 'http://placehold.it/400x400'}}" alt=""></td>
+                                <td><a href="{{route('posts.edit', $post->id)}}">{{$post->user->name}}</a></td>
                                 <td>{{$post->category ? $post->category->name : 'Uncategorized'}}</td>
-                                <td>{{$post->title}}</td>
-                                <td>{{$post->body}}</td>
+                                <td>{{str_limit($post->title, 10)}}</td>
+                                <!--str_limit doing that only appear 15 characters AWESOME! search helper strings laravel-->
+                                <td>{{str_limit($post->body,19)}}</td>
                                 <td>{{$post->created_at->diffForhumans()}}</td>
                                 <td>{{$post->updated_at->diffForhumans()}}</td>
 
