@@ -12,6 +12,8 @@
             <th>Category</th>
             <th>Title</th>
             <th>Body</th>
+              <th>View Post</th>
+              <th>Manage Comments</th>
               <th>Created</th>
               <th>Updated</th>
           </tr>
@@ -29,6 +31,8 @@
                                 <td>{{str_limit($post->title, 10)}}</td>
                                 <!--str_limit doing that only appear 15 characters AWESOME! search helper strings laravel-->
                                 <td>{{str_limit($post->body,19)}}</td>
+                                <td><a href="{{route('home.post', $post->id)}}">View</a></td>
+                                <td><a href="{{route('comments.show', $post->id)}}">Manage</a></td>
                                 <td>{{$post->created_at->diffForhumans()}}</td>
                                 <td>{{$post->updated_at->diffForhumans()}}</td>
 
