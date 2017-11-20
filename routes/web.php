@@ -40,7 +40,12 @@ Route::group(['middleware'=>'admin'], function(){
 
     Route::resource('admin/comments', 'PostCommentController');
     Route::resource('admin/comments/replies', 'PostCommentRepliesController');
+    Route::post('comment/reply','PostCommentRepliesController@createReply');
 
 });
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+//i have to search one form to make auth for the author
+//Route::group(['middleware'=>'author'], function(){
+//    Route::post('comment/reply','PostCommentRepliesController@createReply');
+//});
