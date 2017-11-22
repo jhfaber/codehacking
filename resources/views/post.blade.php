@@ -82,26 +82,35 @@
                             <small>{{$comment->created_at->diffForHumans()}}</small>
                         </h4>
                         <p>{{$comment->body}}</p>
+                        <br/>
+
 
 
 
                     @if(count($comment->replies)>0)
                     <!-- Nested Comment -->
-                        @foreach($comment->replies as $reply )
-                            <div class="comment-reply-container">
-                                <button class="toggle-reply btn btn-primary pull-right">Reply</button>
-                                            <div class="media">
+
+
+                        <div class="show-comments-replies">
+                            <button class="toggle-replies btn btn-primary col-sm-5">Show replies</button>
+
+                            <div class="replies">
+
+                                                @foreach($comment->replies as $reply )
+                                                    <div class="comment-reply-container col-sm-12">
+
+                                                                    <div class="media">
 
 
 
-                                                            <a class="pull-left" href="#">
-                                                                <img width="60" height="60" class="media-object" src="{{$reply->file}}" alt="">
-                                                            </a>
-                                                            <div class="media-body">
-                                                                <h4 class="media-heading">{{$reply->author}}
-                                                                    <small>{{$reply->created_at->diffForHumans()}}</small>
-                                                                </h4>
-                                                                <p>{{$reply->body}}</p>
+                                                                                    <a class="pull-left" href="#">
+                                                                                        <img width="60" height="60" class="media-object" src="{{$reply->file}}" alt="">
+                                                                                    </a>
+                                                                                    <div class="media-body">
+                                                                                        <h4 class="media-heading">{{$reply->author}}
+                                                                                            <small>{{$reply->created_at->diffForHumans()}}</small>
+                                                                                        </h4>
+                                                                                        <p>{{$reply->body}}</p>
 
 
 
@@ -109,25 +118,41 @@
 
 
 
-                                                            </div>
-                                            </div>
+                                                                                    </div>
+                                                                    </div>
+                                                    </div>
+
+                                                @endforeach
+
                             </div>
 
-                        @endforeach
-                        <br/>
 
-                    @endif
-                        {!! Form::open(['method'=>'POST', 'action'=>'PostCommentRepliesController@createReply']) !!}
-                        <input type="hidden" name="comment_id" value="{{$comment->id}}">
-                        <div class="form-group">
-                            {!! Form::label('body', 'Reply:') !!}
-                            {!! Form::textarea('body', null,['class'=>'form-control','rows'=>1]) !!}
+                        @endif
+
+                                                <!-- The next button is user for hide and show the form in resources/assets/sass/app.scss is the
+                                                default css comment-reply hide, down is show de script, it is inherit for layouts blog-post.blade -->
+
+                                                <button class="toggle-reply btn btn-primary pull-left col-sm-5 ">Reply</button>
+
+                                                <div class="comment-reply">
+                                                        {!! Form::open(['method'=>'POST', 'action'=>'PostCommentRepliesController@createReply']) !!}
+                                                        <input type="hidden" name="comment_id" value="{{$comment->id}}">
+                                                        <div class="form-group">
+                                                            {!! Form::label('body', 'Reply:') !!}
+                                                            {!! Form::textarea('body', null,['class'=>'form-control','rows'=>1]) !!}
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {!! Form::submit('Submit',['class'=>'btn btn-primary' ]) !!}
+                                                        </div>
+                                                        {!! Form::close() !!}
+                                                </div>
 
                         </div>
-                        <div class="form-group">
-                            {!! Form::submit('Submit',['class'=>'btn btn-primary' ]) !!}
-                        </div>
-                        {!! Form::close() !!}
+
+
+
+
 
                 </div>
 
@@ -203,8 +228,11 @@
 
 @section('scripts')
     <script>
-        $(".comment-reply-container .toggle-reply").click(function(){
-            $(this)
+        $(".toggle-reply").click(function(){
+            $(this).next().slideToggle("slow");
+        });
+        $(".toggle-replies").click(function(){
+            $(this).next().slideToggle("fast");
         });
     </script>
 

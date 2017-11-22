@@ -8354,3 +8354,12 @@ button.close {
   padding-top: 0px;
 }
 
+.comment-reply {
+  display: none;
+  margin-top: 3px;
+}
+
+.replies {
+  display: none;
+}
+
